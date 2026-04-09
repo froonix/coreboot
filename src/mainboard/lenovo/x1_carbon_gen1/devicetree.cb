@@ -108,6 +108,7 @@ chip northbridge/intel/sandybridge
 						io 0x66 = 0x1604
 					end
 
+					register "has_keyboard_light" = "0"
 					register "has_keyboard_backlight" = "1"
 
 					register "beepmask0" = "0x00"
