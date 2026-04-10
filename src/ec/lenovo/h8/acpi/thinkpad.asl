@@ -242,7 +242,7 @@ Device (HKEY)
 	Method (MLCG, 1)
 	{
 		If (HKBL) {
-			Local0 = 0x100
+			Local0 = 0x200
 			Local0 |= \_SB.PCI0.LPCB.EC.KBBL
 			Return (Local0)
 		} Else {
