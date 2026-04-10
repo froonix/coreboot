@@ -246,7 +246,12 @@ Device (HKEY)
 			Local0 |= \_SB.PCI0.LPCB.EC.KBBL
 			Return (Local0)
 		} Else {
-			Return (0)
+			if (HKLT) {
+				Local0 = \_SB.PCI0.LPCB.EC.KBLT
+				Return (Local0)
+			} Else {
+				Return (0)
+			}
 		}
 	}
 
