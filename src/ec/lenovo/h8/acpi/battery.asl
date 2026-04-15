@@ -138,8 +138,9 @@ Method(BSTA, 4, NotSerialized)
 		Local2 *= BAVO
 		Arg1 [1] = Local2 / 1000
 	} else {
-		Arg1 [2] = BARC
-		Arg1 [1] = Local2
+		// FIXME: WIP
+		Arg1 [2] = BARC * 10
+		Arg1 [1] = Local2 * 10
 	}
 	Arg1 [3] = BAVO
 	Release(ECLK)
@@ -150,15 +151,18 @@ Method(BINF, 2, Serialized)
 {
 	Acquire(ECLK, 0xffff)
 	^BPAG(1 | Arg1) /* Battery 0 static information */
-	Arg0 [0] = BAMA ^ 1
+	Arg0 [0] = BAMA // FIXME: WIP
 	Local0 = BAMA
 	^BPAG(Arg1)
 	Local2 = BAFC
 	^BPAG(Arg1 | 2)
 	Local1 = BADC
 
-	if (Local0)
-	{
+	if (Local0) {
+		Local1 *= 10
+		Local2 *= 10
+	} else {
+		// FIXME: WIP
 		Local1 *= 10
 		Local2 *= 10
 	}
