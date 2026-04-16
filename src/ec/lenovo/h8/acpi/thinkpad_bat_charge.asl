@@ -41,8 +41,8 @@ Method (BDSS, 1, NotSerialized)
 
 	// FIXME: Implement BDSS!
 	//
-	//        BAT0 = send 0x06 to register 0xb4
-	//        BAT1 = send 0x06 to register 0xb5
+	//        BAT0 = send 0x04 (or 0x06) to register 0xb4
+	//        BAT1 = send 0x04 (or 0x06) to register 0xb5
 	//
 	//        send 0x01 to clear it? (auto mode)
 	// ...
