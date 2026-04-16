@@ -40,6 +40,11 @@ Method (BDSS, 1, NotSerialized)
 	//		return 0;
 
 	// FIXME: Implement BDSS!
+	//
+	//        BAT0 = send 0x06 to register 0xb4
+	//        BAT1 = send 0x06 to register 0xb5
+	//
+	//        send 0x01 to clear it? (auto mode)
 	// ...
 
 	Return (1 << 31)
@@ -67,6 +72,11 @@ Method (BICS, 1, NotSerialized)
 	//		return 0;
 
 	// FIXME: Implement BICS!
+	//
+	//        BAT0 = send 0x02 to register 0xb4
+	//        BAT1 = send 0x02 to register 0xb5
+	//
+	//        send 0x01 to clear it? (auto mode)
 	// ...
 
 	Return (1 << 31)
