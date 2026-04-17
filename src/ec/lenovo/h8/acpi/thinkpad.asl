@@ -305,6 +305,15 @@ Device (HKEY)
 		}
 	}
 
+	/*
+	 * IgnoreBatteryPowerUnit returns the value of IBMA.
+	 * Called from BSTA and BINF methods in battery.asl.
+	 */
+	Method (IBPU, 0, NotSerialized)
+	{
+		Return(IBMA)
+	}
+
 	#if CONFIG(H8_HAS_BAT_THRESHOLDS_IMPL)
 	#include "thinkpad_bat_thresholds.asl"
 	#endif
