@@ -33,6 +33,8 @@ struct ec_lenovo_h8_config {
 	u8 has_power_management_beeps;
 	u8 has_uwb;
 
+	u8 ignore_bama_flag;
+
 	u8 bdc_gpio_num;
 	u8 bdc_gpio_lvl;
 

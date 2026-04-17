@@ -42,5 +42,10 @@ void h8_ssdt_generator(const struct device *dev)
 	acpigen_write_name_byte("HUWB", (conf && conf->has_uwb) ?
 				ONE_OP : ZERO_OP);
 
+	/* FIXME: Find (unknown) flag in EC RAM to distinguish battery
+	          power units at newer devices such as the T440p. */
+	acpigen_write_name_byte("IBMA", (conf && conf->ignore_bama_flag) ?
+				ONE_OP : ZERO_OP);
+
 	acpigen_pop_len(); /* Scope HKEY */
 }

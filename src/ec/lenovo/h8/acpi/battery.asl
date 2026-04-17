@@ -133,14 +133,18 @@ Method(BSTA, 4, NotSerialized)
 
 	Arg1 [0] = Local0
 
-	if (Local1) {
-		Arg1 [2] = BARC * 10
-		Local2 *= BAVO
-		Arg1 [1] = Local2 / 1000
-	} else {
-		// FIXME: WIP
+	if (\IBMA) {
 		Arg1 [2] = BARC * 10
 		Arg1 [1] = Local2 * 10
+	} else {
+		if (Local1) {
+			Arg1 [2] = BARC * 10
+			Local2 *= BAVO
+			Arg1 [1] = Local2 / 1000
+		} else {
+			Arg1 [2] = BARC
+			Arg1 [1] = Local2
+		}
 	}
 	Arg1 [3] = BAVO
 	Release(ECLK)
@@ -151,22 +155,23 @@ Method(BINF, 2, Serialized)
 {
 	Acquire(ECLK, 0xffff)
 	^BPAG(1 | Arg1) /* Battery 0 static information */
-	Arg0 [0] = BAMA // FIXME: WIP
 	Local0 = BAMA
 	^BPAG(Arg1)
 	Local2 = BAFC
 	^BPAG(Arg1 | 2)
 	Local1 = BADC
 
-	if (Local0) {
-		Local1 *= 10
-		Local2 *= 10
-	} else {
-		// FIXME: WIP
+	if (\IBMA) {
+		Local0 = 0x01
+	}
+
+	if (Local0)
+	{
 		Local1 *= 10
 		Local2 *= 10
 	}
 
+	Arg0 [0] = Local0 ^ 1	// PowerUnit (mWh/mAh)
 	Arg0 [1] = Local1	// Design Capacity
 	Arg0 [2] = Local2	// Last full charge capacity
 	Arg0 [4] = BADV		// Design Voltage

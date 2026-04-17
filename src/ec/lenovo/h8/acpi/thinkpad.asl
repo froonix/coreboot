@@ -7,6 +7,7 @@ Device (HKEY)
 	External (\HWAN, IntObj)
 	External (\HKBL, IntObj)
 	External (\HUWB, IntObj)
+	External (\IBMA, IntObj)
 
 	Name (_HID, EisaId (CONFIG_THINKPADEC_HKEY_EISAID))
 
