@@ -7,6 +7,7 @@ Device (HKEY)
 	External (\HWAN, IntObj)
 	External (\HKBL, IntObj)
 	External (\HUWB, IntObj)
+	External (\HFPU, IntObj)
 
 	Name (_HID, EisaId (CONFIG_THINKPADEC_HKEY_EISAID))
 
@@ -302,6 +303,18 @@ Device (HKEY)
 			\_SB.PCI0.LPCB.EC.BTEB = WBDC
 			\_SB.PCI0.LPCB.EC.WWEB = WWAN
 		}
+	}
+
+	/*
+	 * RFPU (ReadFixedPowerUnit) - disables BAMA logic
+	 * Called from BSTA and BINF methods in battery.asl
+	 *
+	 * FIXME: Find flag in EC RAM to distinguish battery
+	 * power units on newer devices such as the T440p.
+	 */
+	Method (RFPU, 0)
+	{
+		Return(HFPU)
 	}
 
 	#if CONFIG(H8_HAS_BAT_THRESHOLDS_IMPL)

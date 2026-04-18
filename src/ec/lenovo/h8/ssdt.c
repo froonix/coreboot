@@ -41,6 +41,8 @@ void h8_ssdt_generator(const struct device *dev)
 				ONE_OP : ZERO_OP);
 	acpigen_write_name_byte("HUWB", (conf && conf->has_uwb) ?
 				ONE_OP : ZERO_OP);
+	acpigen_write_name_byte("HFPU", (conf && conf->has_fixed_power_unit) ?
+				ONE_OP : ZERO_OP);
 
 	acpigen_pop_len(); /* Scope HKEY */
 }
