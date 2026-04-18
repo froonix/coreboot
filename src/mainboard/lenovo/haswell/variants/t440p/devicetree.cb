@@ -68,7 +68,7 @@ chip northbridge/intel/haswell
 					register "config2" = "0xa8"
 					register "config3" = "0xc4"
 					register "has_keyboard_backlight" = "1"
-					register "ignore_bama_flag" = "1"
+					register "has_fixed_power_unit" = "1"
 					register "event2_enable" = "0xff"
 					register "event3_enable" = "0xff"
 					register "event4_enable" = "0xd0"

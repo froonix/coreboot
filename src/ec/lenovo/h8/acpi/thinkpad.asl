@@ -7,7 +7,7 @@ Device (HKEY)
 	External (\HWAN, IntObj)
 	External (\HKBL, IntObj)
 	External (\HUWB, IntObj)
-	External (\IBMA, IntObj)
+	External (\HFPU, IntObj)
 
 	Name (_HID, EisaId (CONFIG_THINKPADEC_HKEY_EISAID))
 
@@ -306,12 +306,15 @@ Device (HKEY)
 	}
 
 	/*
-	 * IgnoreBatteryPowerUnit returns the value of IBMA.
-	 * Called from BSTA and BINF methods in battery.asl.
+	 * RFPU (ReadFixedPowerUnit) - disables BAMA logic
+	 * Called from BSTA and BINF methods in battery.asl
+	 *
+	 * FIXME: Find flag in EC RAM to distinguish battery
+	 * power units at newer devices such as the T440p.
 	 */
-	Method (IBPU, 0, NotSerialized)
+	Method (RFPU, 0)
 	{
-		Return(IBMA)
+		Return(HFPU)
 	}
 
 	#if CONFIG(H8_HAS_BAT_THRESHOLDS_IMPL)

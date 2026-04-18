@@ -133,7 +133,7 @@ Method(BSTA, 4, NotSerialized)
 
 	Arg1 [0] = Local0
 
-	if (\_SB.PCI0.LPCB.EC.HKEY.IBPU()) {
+	if (\_SB.PCI0.LPCB.EC.HKEY.RFPU()) {
 		Arg1 [2] = BARC * 10
 		Arg1 [1] = Local2 * 10
 	} else {
@@ -161,7 +161,7 @@ Method(BINF, 2, Serialized)
 	^BPAG(Arg1 | 2)
 	Local1 = BADC
 
-	if (\_SB.PCI0.LPCB.EC.HKEY.IBPU()) {
+	if (\_SB.PCI0.LPCB.EC.HKEY.RFPU()) {
 		Local0 = 0x01
 	}
 
