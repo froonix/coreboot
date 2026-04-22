@@ -317,6 +317,11 @@ Device (HKEY)
 		Return(HFPU)
 	}
 
+	/*
+	 * TODO: Move HFPU/RFPU to battery.asl and update ssdt.c!
+	 * This is required because certain mainboards only include battery.asl.
+	 */
+
 	#if CONFIG(H8_HAS_BAT_THRESHOLDS_IMPL)
 	#include "thinkpad_bat_thresholds.asl"
 	#endif
