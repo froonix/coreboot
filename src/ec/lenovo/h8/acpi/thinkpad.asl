@@ -237,22 +237,25 @@ Device (HKEY)
 	 * Argument is unused.
 	 * Returns the current state:
 	 *  Bit 9: Backlight HW present
+	 *  Bit 4: ThinkLight state
 	 *  Bit 0-1: Brightness level
 	 */
 	Method (MLCG, 1)
 	{
+		Local0 = 0x0
+
 		If (HKBL) {
 			Local0 = 0x200
-			Local0 |= \_SB.PCI0.LPCB.EC.KBBL
-			Return (Local0)
-		} Else {
-			if (HKLT) {
-				Local0 = \_SB.PCI0.LPCB.EC.KBLT
-				Return (Local0)
-			} Else {
-				Return (0)
+			Local0 |= (\_SB.PCI0.LPCB.EC.KBBL & 0x3)
+		}
+
+		If (HKLT) {
+			if(\_SB.PCI0.LPCB.EC.KBLT) {
+				Local0 |= 0x10;
 			}
 		}
+
+		Return (Local0)
 	}
 
 	/*
