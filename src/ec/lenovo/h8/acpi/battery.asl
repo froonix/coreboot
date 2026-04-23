@@ -87,6 +87,7 @@ Field (ERAM, ByteAcc, NoLock, Preserve)
 Method(BPAG, 1, NotSerialized)
 {
 	PAGE = Arg0
+	Stall(100)
 #ifdef BATTERY_PAGE_DELAY_MS
 	Sleep(BATTERY_PAGE_DELAY_MS)
 #endif
