@@ -36,6 +36,12 @@ Field (ERAM, ByteAcc, NoLock, Preserve)
 			BAMA,  1,
 }
 
+Field (ERAM, ByteAcc, NoLock, Preserve)
+{
+	Offset(0xa1),
+			BAMB,  8,
+}
+
 /* PAGE == 0x02 */
 Field (ERAM, ByteAcc, NoLock, Preserve)
 {
@@ -96,7 +102,8 @@ Method(BSTA, 4, NotSerialized)
 	Acquire(ECLK, 0xffff)
 	Local0 = 0
 	^BPAG(Arg0 | 1)
-	Local1 = BAMA
+	Local1 = BAMB
+	Local1 >>= 0x07
 	^BPAG(Arg0) /* Battery dynamic information */
 
 	/*
@@ -150,8 +157,9 @@ Method(BINF, 2, Serialized)
 {
 	Acquire(ECLK, 0xffff)
 	^BPAG(1 | Arg1) /* Battery 0 static information */
-	Arg0 [0] = BAMA ^ 1
-	Local0 = BAMA
+	Local0 = BAMB
+	Local0 >>= 0x07
+	Arg0 [0] = Local0 ^ 1
 	^BPAG(Arg1)
 	Local2 = BAFC
 	^BPAG(Arg1 | 2)
