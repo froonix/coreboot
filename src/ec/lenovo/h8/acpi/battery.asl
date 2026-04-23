@@ -101,9 +101,7 @@ Method(BSTA, 4, NotSerialized)
 {
 	Acquire(ECLK, 0xffff)
 	Local0 = 0
-	^BPAG(Arg0 | 1)
-	Local1 = BAMB
-	Local1 >>= 0x07
+	Local1 = 0x01
 	^BPAG(Arg0) /* Battery dynamic information */
 
 	/*
