@@ -236,17 +236,17 @@ Device (HKEY)
 	/*
 	 * Argument is unused.
 	 * Returns the current state:
-	 *  Bit 9: Backlight HW present
+	 *  Bit 9: Keyboard backlight HW present
 	 *  Bit 4: ThinkLight state
-	 *  Bit 0-1: Brightness level
+	 *  Bit 0-1: Keyboard backlight brightness level
 	 */
 	Method (MLCG, 1)
 	{
 		Local0 = 0x0
 
 		If (HKBL) {
-			Local0 = 0x200
-			Local0 |= (\_SB.PCI0.LPCB.EC.KBBL & 0x3)
+			Local0 |= 0x200
+			Local0 |= \_SB.PCI0.LPCB.EC.KBBL & 0x3
 		}
 
 		If (HKLT) {
@@ -260,12 +260,12 @@ Device (HKEY)
 
 	/*
 	 * Set the current state:
-	 * Bit 0-1: Brightness level
+	 * Bit 0-1: Keyboard backlight brightness level
 	 */
 	Method (MLCS, 1)
 	{
 		If (HKBL) {
-			\_SB.PCI0.LPCB.EC.KBBL = Arg0 & 3
+			\_SB.PCI0.LPCB.EC.KBBL = Arg0 & 0x3
 		}
 	}
 
