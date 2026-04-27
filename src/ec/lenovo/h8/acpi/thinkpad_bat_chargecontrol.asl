@@ -5,7 +5,7 @@
 #define ENABLE_FORCEDISCHARGE_VALUE  0x04
 #define DISABLE_FORCEDISCHARGE_VALUE 0x00 // FIXME!
 
-Scope(\_SB.PCI0.LPCB.EC)
+Scope(\_SB.PCI0.LPCB.EC.HKEY)
 {
 	/* EC Registers */
 	Field (ERAM, ByteAcc, NoLock, Preserve)
@@ -43,25 +43,24 @@ Scope(\_SB.PCI0.LPCB.EC)
 		}
 
 		// FIXME: Implement break on AC attach!
-		If (Local2)
+		If (!Local2)
 		{
-			/* ... */
+			// BAT0
+			If (Local1 == 1)
+			{
+				B0CC = Local3
+				Return (0x0)
+			}
+
+			// BAT1
+			If (Local1 == 2)
+			{
+				B1CC = Local3
+				Return (0x0)
+			}
 		}
 
-		// BAT0
-		If (Local1 == 1)
-		{
-			B0CC = Local3
-		}
-
-		// BAT1
-		If (Local1 == 2)
-		{
-			B1CC = Local3
-		}
-
-		// FIXME: Find correct return value?
-		Return (0x0)
+		Return (1 << 31)
 	}
 
 	/*
@@ -120,16 +119,15 @@ Scope(\_SB.PCI0.LPCB.EC)
 			If (Local1 == 1)
 			{
 				B0CC = Local3
+				Return (0x0)
 			}
 
 			// BAT1
 			If (Local1 == 2)
 			{
 				B1CC = Local3
+				Return (0x0)
 			}
-
-			// FIXME: Find correct return value?
-			Return (0x0)
 		}
 
 		Return (1 << 31)
