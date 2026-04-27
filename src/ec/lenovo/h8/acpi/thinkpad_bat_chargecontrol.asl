@@ -12,6 +12,8 @@ Scope(\_SB.PCI0.LPCB.EC.HKEY)
 	{
 		Offset(0x0f),
 				BACB,  8,	/* Battery charge behaviour */
+		Offset(0x21),
+				BAET, 16,	/* Effective time (for inhibit-charge) */
 		Offset (0x38),
 				BAST, 16,	/* Battery state */
 		Offset (0xb4),
@@ -92,7 +94,7 @@ Scope(\_SB.PCI0.LPCB.EC.HKEY)
 
 	/*
 	 * Set state for inhibit-charge:
-	 *  Bit 8-23: Effective time (0xffff indicates forever)
+	 *  Bit 8-23: Effective time in minutes (0xffff indicates forever)
 	 *  Bit 4-5: Battery ID (0x1=BAT0; 0x2=BAT1)
 	 *  Bit 0: Enable or disable
 	 */
@@ -102,9 +104,15 @@ Scope(\_SB.PCI0.LPCB.EC.HKEY)
 		Local1 = (Arg0 >> 4) & 0x3    // Battery ID
 		Local2 = (Arg0 >> 8) & 0xffff // Effective time
 		Local3 = 0x00                 // EC RAM value
+		Local4 = 0x00
 
-		// FIXME: Implement effective time!
-		If (Local2 == 0xffff)
+		If (Local2 != 0xffff)
+		{
+			Local4 = Local2 >> 8
+		}
+
+		// Only allow effective time <256 minutes (1-byte) or 0xffff.
+		If (Local4 == 0x00)
 		{
 			If (Local0)
 			{
@@ -118,6 +126,7 @@ Scope(\_SB.PCI0.LPCB.EC.HKEY)
 			// BAT0
 			If (Local1 == 1)
 			{
+				BAET = Local2
 				B0CC = Local3
 				Return (0x0)
 			}
@@ -125,6 +134,7 @@ Scope(\_SB.PCI0.LPCB.EC.HKEY)
 			// BAT1
 			If (Local1 == 2)
 			{
+				BAET = Local2
 				B1CC = Local3
 				Return (0x0)
 			}
