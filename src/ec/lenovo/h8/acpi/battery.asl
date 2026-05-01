@@ -344,3 +344,55 @@ Method(_Q4D, 0, NotSerialized)
 {
 	Notify(BAT1, 0x80)
 }
+
+// Read 8-bit field before/after page switch
+//   Arg0: Page
+//   Arg1: Register
+//   Arg2: Sleep (ms)
+Method(DBG1, 3, Serialized)
+{
+	Acquire(ECLK, 0xffff)
+	Local0 = 0x0
+
+	OperationRegion (ERM1, EmbeddedControl, Arg1, 1)
+	Field (ERM1, ByteAcc, NoLock, Preserve) { __F1, 8 }
+
+	^BPAG(0x0)
+	Sleep(Arg2)
+	Local0 |= (__F1 << 32)
+
+	^BPAG(Arg0)
+	Sleep(Arg2)
+	Local0 |= __F1
+
+	^BPAG(0x0)
+	Sleep(Arg2)
+	Release(ECLK)
+	Return (Local0)
+}
+
+// Read 16-bit field before/after page switch
+//   Arg0: Page
+//   Arg1: Register
+//   Arg2: Sleep (ms)
+Method(DBG2, 3, Serialized)
+{
+	Acquire(ECLK, 0xffff)
+	Local0 = 0x0
+
+	OperationRegion (ERM2, EmbeddedControl, Arg1, 2)
+	Field (ERM2, ByteAcc, NoLock, Preserve) { __F2, 16 }
+
+	^BPAG(0x0)
+	Sleep(Arg2)
+	Local0 |= (__F2 << 32)
+
+	^BPAG(Arg0)
+	Sleep(Arg2)
+	Local0 |= __F2
+
+	^BPAG(0x0)
+	Sleep(Arg2)
+	Release(ECLK)
+	Return (Local0)
+}
