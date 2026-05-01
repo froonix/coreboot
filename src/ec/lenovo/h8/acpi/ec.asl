@@ -2,6 +2,9 @@
 
 Device(EC)
 {
+	/* Only available with thinkpad_bat_chargecontrol.asl */
+	External (\_SB.PCI0.LPCB.EC.HKEY.RBCC, MethodObj)
+
 	Name (_HID, EISAID("PNP0C09"))
 	Name (_UID, 0)
 
@@ -156,6 +159,11 @@ Device(EC)
 	/* AC status change: not present */
 	Method(_Q27, 0, NotSerialized)
 	{
+		#if CONFIG(H8_HAS_BAT_CHARGE_CONTROL)
+		/* Reset battery charge control on AC detach */
+		\_SB.PCI0.LPCB.EC.HKEY.RBCC(0)
+		#endif
+
 		Notify (AC, 0x80)
 		EVNT = 0x50
 		\PNOT()
