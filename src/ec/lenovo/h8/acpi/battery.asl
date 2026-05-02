@@ -32,8 +32,7 @@ Field (ERAM, ByteAcc, NoLock, Preserve)
 Field (ERAM, ByteAcc, NoLock, Preserve)
 {
 	Offset(0xa0),
-			    , 15,
-			BAMA,  1,
+			BAMA, 16,
 }
 
 /* PAGE == 0x02 */
@@ -97,6 +96,7 @@ Method(BSTA, 4, NotSerialized)
 	Local0 = 0
 	^BPAG(Arg0 | 1)
 	Local1 = BAMA
+	Local1 >>= 0x0f
 	^BPAG(Arg0) /* Battery dynamic information */
 
 	/*
@@ -138,20 +138,20 @@ Method(BSTA, 4, NotSerialized)
 		Local2 *= BAVO
 		Arg1 [1] = Local2 / 1000
 	} else {
-		Arg1 [2] = BARC
-		Arg1 [1] = Local2
+		Arg1 [2] = BARC * 10
+		Arg1 [1] = Local2 * 10
 	}
 	Arg1 [3] = BAVO
 	Release(ECLK)
 	Return (Arg1)
 }
 
-Method(BINF, 2, Serialized)
+Method(BINF, 2, NotSerialized)
 {
 	Acquire(ECLK, 0xffff)
 	^BPAG(1 | Arg1) /* Battery 0 static information */
-	Arg0 [0] = BAMA ^ 1
 	Local0 = BAMA
+	Local0 >>= 0x0f
 	^BPAG(Arg1)
 	Local2 = BAFC
 	^BPAG(Arg1 | 2)
@@ -163,6 +163,7 @@ Method(BINF, 2, Serialized)
 		Local2 *= 10
 	}
 
+	Arg0 [0] = Local0 ^ 1	// PowerUnit (mWh/mAh)
 	Arg0 [1] = Local1	// Design Capacity
 	Arg0 [2] = Local2	// Last full charge capacity
 	Arg0 [4] = BADV		// Design Voltage
