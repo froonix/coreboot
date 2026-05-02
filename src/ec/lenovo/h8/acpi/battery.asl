@@ -32,7 +32,7 @@ Field (ERAM, ByteAcc, NoLock, Preserve)
 Field (ERAM, ByteAcc, NoLock, Preserve)
 {
 	Offset(0xa0),
-			BAMA, 16,
+			BAMA, 16,		/* 16-bit read required; 8-bit access at 0xa1 returns garbage! */
 }
 
 /* PAGE == 0x02 */
@@ -93,17 +93,20 @@ Method(BPAG, 1, NotSerialized)
 Method(BSTA, 4, NotSerialized)
 {
 	Acquire(ECLK, 0xffff)
-	Local0 = 0
-	^BPAG(Arg0 | 1)
-	Local1 = BAMA
-	Local1 >>= 0x0f
+
+	^BPAG(Arg0 | 1) /* Battery static information */
+	Local4 = BAMA
+	Local4 >>= 0x0f
 	^BPAG(Arg0) /* Battery dynamic information */
 
 	/*
-	 * Present rate is a 16bit signed int, positive while charging
-	 * and negative while discharging.
+	 * Present rate (BAPR) is a 16bit signed int, positive while
+	 * charging and negative while discharging.
 	 */
-	Local2 = BAPR
+	Local0 = 0
+	Local1 = BAPR
+	Local2 = BARC
+	Local3 = BAVO
 
 	If (Arg2) // Charging
 	{
@@ -115,11 +118,11 @@ Method(BSTA, 4, NotSerialized)
 		{
 			Local0 |= 1
 			// Negate present rate
-			Local2 = 0x10000 - Local2
+			Local1 = 0x10000 - Local1
 		}
 		Else // Full battery, force to 0
 		{
-			Local2 = 0
+			Local1 = 0
 		}
 	}
 
@@ -127,21 +130,24 @@ Method(BSTA, 4, NotSerialized)
 	 * The present rate value must be positive now, if it is not we have an
 	 * EC bug or inconsistency and force the value to 0.
 	 */
-	If (Local2 >= 0x8000) {
-		Local2 = 0
+	If (Local1 >= 0x8000) {
+		Local1 = 0
 	}
 
-	Arg1 [0] = Local0
-
-	if (Local1) {
-		Arg1 [2] = BARC * 10
-		Local2 *= BAVO
-		Arg1 [1] = Local2 / 1000
-	} else {
-		Arg1 [2] = BARC * 10
-		Arg1 [1] = Local2 * 10
+	/*
+	 * Values are in mAh but we want mWh.
+	 * This is required to match PowerUnit!
+	 */
+	if (Local4) {
+		Local1 *= Local3
+		Local1 /= 1000
+		Local2 *= 10
 	}
-	Arg1 [3] = BAVO
+
+	Arg1 [0] = Local0	// Battery State
+	Arg1 [1] = Local1	// Battery Present Rate
+	Arg1 [2] = Local2	// Battery Remaining Capacity
+	Arg1 [3] = Local3	// Battery Present Voltage
 	Release(ECLK)
 	Return (Arg1)
 }
@@ -149,7 +155,7 @@ Method(BSTA, 4, NotSerialized)
 Method(BINF, 2, Serialized)
 {
 	Acquire(ECLK, 0xffff)
-	^BPAG(1 | Arg1) /* Battery 0 static information */
+	^BPAG(1 | Arg1) /* Battery static information */
 	Local0 = BAMA
 	Local0 >>= 0x0f
 	^BPAG(Arg1)
