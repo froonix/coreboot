@@ -107,6 +107,14 @@ static const struct sm_object sticky_fn = SM_DECLARE_BOOL({
 	.default_value	= false,
 });
 
+/* FnLock LED */
+static const struct sm_object sticky_fnlock_led = SM_DECLARE_BOOL({
+	.opt_name	= "sticky_fnlock_led",
+	.ui_name	= "Sticky FnLock LED",
+	.ui_helptext	= "Alternative FnLock LED behaviour",
+	.default_value	= false,
+});
+
 /* Function keys primary */
 static const struct sm_object f1_to_f12_as_primary = SM_DECLARE_BOOL({
 	.opt_name	= "f1_to_f12_as_primary",

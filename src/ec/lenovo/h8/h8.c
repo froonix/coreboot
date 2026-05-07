@@ -73,6 +73,42 @@ static void h8_sticky_fn(int on)
 		ec_clr_bit(0x0, 3);
 }
 
+/*
+ * In stock BIOS this (undocumented) flag is bound to "sticky_fn".
+ * But that's not strictly required, it can be toggled independently!
+ */
+static void h8_sticky_fnlock_led(int on)
+{
+	if (on)
+		/*
+		 * Stock BIOS sets this bit when the "sticky_fn" option is
+		 * enabled.
+		 *
+		 * Behaviour with sticky_fn=1:
+		 *   The FnLock LED indicates the sticky key state rather than
+		 *   the FnLock state. The LED turns on when Fn is pressed and
+		 *   stays on while the EC waits for the next keyboard scancode.
+		 *
+		 * Behaviour with sticky_fn=0:
+		 *   The FnLock LED is always off, except while the Fn key is
+		 *   pressed and held.
+		 */
+		ec_set_bit(H8_CONFIG3, H8_CONFIG3_STICKY_FNLOCK_LED);
+	else
+		/*
+		 * Stock BIOS clears this bit when the "sticky_fn" option is
+		 * disabled. The FnLock LED acts as an indicator for the FnLock
+		 * state.
+		 *
+		 * Behaviour with sticky_fn=1:
+		 *   FnLock LED is on if FnLock is inactive.
+		 *
+		 * Behaviour with sticky_fn=0:
+		 *   FnLock LED is on if FnLock is active.
+		 */
+		ec_clr_bit(H8_CONFIG3, H8_CONFIG3_STICKY_FNLOCK_LED);
+}
+
 static void f1_to_f12_as_primary(int on)
 {
 	if (on)
@@ -338,6 +374,9 @@ static void h8_enable(struct device *dev)
 	h8_fn_ctrl_swap(get_uint_option("fn_ctrl_swap", CONFIG(H8_FN_CTRL_SWAP)));
 
 	h8_sticky_fn(get_uint_option("sticky_fn", 0));
+
+	if (CONFIG(H8_HAS_FNLOCK_LED))
+		h8_sticky_fnlock_led(get_uint_option("sticky_fnlock_led", 0));
 
 	if (CONFIG(H8_HAS_PRIMARY_FN_KEYS))
 		f1_to_f12_as_primary(get_uint_option("f1_to_f12_as_primary", 1));

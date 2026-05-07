@@ -10,6 +10,7 @@ wlan=Enable
 fn_ctrl_swap=Disable
 f1_to_f12_as_primary=Enable
 sticky_fn=Disable
+sticky_fnlock_led=Disable
 trackpoint=Enable
 backlight=Keyboard
 enable_dual_graphics=Disable
