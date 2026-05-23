@@ -12,6 +12,13 @@ enum usb_always_on {
 	UAO_AC_ONLY = 2
 };
 
+enum keyboard_illumination_control {
+	KIC_BOTH	= 0,
+	KIC_KEYBOARD	= 1,
+	KIC_THINKLIGHT	= 2,
+	KIC_NONE	= 3
+};
+
 void h8_trackpoint_enable(int on);
 void h8_wlan_enable(int on);
 void h8_set_audio_mute(int on);
