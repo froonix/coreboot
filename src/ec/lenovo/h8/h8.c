@@ -254,6 +254,10 @@ static void h8_enable(struct device *dev)
 	reg8 |= H8_CONFIG0_TC_ENABLE;
 	ec_write(H8_CONFIG0, reg8);
 
+	/* Disable keyboard backlight if non-backlit hardware is installed */
+	if (conf->has_keyboard_backlight && !(ec_read(0x34) & 0x40))
+		conf->has_keyboard_backlight = false;
+
 	reg8 = conf->config1;
 	if (conf->has_thinklight || conf->has_keyboard_backlight) {
 		/* Default to both backlights */
