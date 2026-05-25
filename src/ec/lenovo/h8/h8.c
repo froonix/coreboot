@@ -11,6 +11,7 @@
 #include <option.h>
 #include <pc80/keyboard.h>
 #include <types.h>
+#include <delay.h>
 
 #include "h8.h"
 #include "chip.h"
@@ -253,6 +254,18 @@ static void h8_enable(struct device *dev)
 	reg8 |= H8_CONFIG0_SMM_H8_ENABLE;
 	reg8 |= H8_CONFIG0_TC_ENABLE;
 	ec_write(H8_CONFIG0, reg8);
+
+	/*
+	 * Power off ThinkLight during system initialization. Otherwise it
+	 * is always-on if `backlight` option is "Keyboard only" or "None";
+	 * with no way to disable it afterwards, including Fn+Space.
+	 */
+	if (conf->has_thinklight && (get_uint_option("backlight", 0) & 0x1)) {
+		ec_set_bit(0x3b, 1);
+		mdelay(10);
+		ec_clr_bit(0x3b, 1);
+		mdelay(10);
+	}
 
 	reg8 = conf->config1;
 	if (conf->has_thinklight || conf->has_keyboard_backlight) {
