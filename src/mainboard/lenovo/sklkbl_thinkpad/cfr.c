@@ -51,7 +51,7 @@ static struct sm_obj_form ec = {
 	.ui_name = "Embedded Controller",
 	.obj_list = (const struct sm_object *[]) {
 		&bluetooth,
-		&backlight,
+		&keyboard_backlight,
 		&uwb,
 		&usb_always_on,
 		&volume,

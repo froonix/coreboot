@@ -18,12 +18,30 @@ static const struct sm_object bluetooth = SM_DECLARE_BOOL({
 	.default_value	= true,
 });
 
-/* Keyboard Backlight */
-static const struct sm_object backlight = SM_DECLARE_BOOL({
+/* ThinkLight and Keyboard Backlight */
+static const struct sm_object backlight = SM_DECLARE_ENUM({
 	.opt_name	= "backlight",
-	.ui_name	= "Keyboard Backlight",
-	.ui_helptext	= "Enable or disable the keyboard backlight",
-	.default_value	= false,
+	.ui_name	= "Keyboard Illumination Control",
+	.ui_helptext	= "Select keyboard illumination device",
+	.default_value	= KIC_BOTH,
+	.values		= (const struct sm_enum_value[]) {
+				{ "Both",			KIC_BOTH	},
+				{ "Keyboard backlight only",	KIC_KEYBOARD	},
+				{ "ThinkLight only",		KIC_THINKLIGHT	},
+				{ "None",			KIC_NONE	},
+				SM_ENUM_VALUE_END				},
+});
+
+/* Keyboard Backlight - for devices without ThinkLight */
+static const struct sm_object keyboard_backlight = SM_DECLARE_ENUM({
+	.opt_name	= "backlight",
+	.ui_name	= "Keyboard Illumination Control",
+	.ui_helptext	= "Enable or disable keyboard illumination",
+	.default_value	= KIC_KEYBOARD,
+	.values		= (const struct sm_enum_value[]) {
+				{ "Keyboard backlight",		KIC_KEYBOARD	},
+				{ "None",			KIC_NONE	},
+				SM_ENUM_VALUE_END				},
 });
 
 /* USB Always-On */
